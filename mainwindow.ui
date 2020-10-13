@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>604</width>
+    <height>450</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>LERMA</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1">
+     <widget class="QStackedWidget" name="viewSW">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(138, 0, 0);</string>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="page">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="LoginGB">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="title">
+           <string>Log In</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="usernameLE">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);
+</string>
+             </property>
+             <property name="placeholderText">
+              <string>User</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLineEdit" name="paswordLE">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="echoMode">
+              <enum>QLineEdit::Password</enum>
+             </property>
+             <property name="placeholderText">
+              <string>Password</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="loginPB">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(170, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string>Login</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="sigInGB">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="title">
+           <string>Sig In</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="newUserLE">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="placeholderText">
+              <string>User</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLineEdit" name="emailLE">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="placeholderText">
+              <string>email</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLineEdit" name="newPasswordLE">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="echoMode">
+              <enum>QLineEdit::Password</enum>
+             </property>
+             <property name="placeholderText">
+              <string>Password</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="signInPB">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="font">
+              <font>
+               <family>Arial</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(170, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string>Sigin</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_2">
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QComboBox" name="comboBox">
+          <property name="font">
+           <font>
+            <family>Verdana</family>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(255, 255, 255);</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Todos los Departamentos</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Alimentos y Bebidas</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Libros</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Electrónicos</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Hogar Y Cocina</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Deporte y Aire Libre</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollContent">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>566</width>
+             <height>340</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>604</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <action name="actionCargar_Base_de_Datos">
+   <property name="text">
+    <string>Cargar Base de Datos</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
