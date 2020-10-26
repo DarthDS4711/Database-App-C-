@@ -51,11 +51,17 @@ private slots:
 
     void on_comboBox_currentIndexChanged(int index);
 
+    void on_sortBy_currentIndexChanged(int index);
+
+    void on_searchText_textChanged(const QString &arg1);
+
 private:
     //part of variables of the program
     Ui::MainWindow *ui;
     vector<User> users;
-    vector<Product>products;
+    vector<Product> products;
+    vector<Product> sublist;
+    vector<Product> temporalList;
     QGridLayout *gLay;
     QAction *openFileAction;
     QFile dbFile;
@@ -78,6 +84,9 @@ private:
     void deleteWidgets();
     void createListProducts(int index, const QString & prefix);
     void addWidgets(vector<Product> &list);
+    void sortByMinorPrice(int selectList);
+    void sortByMajorPrice(int selectlist);
+    void searchCoincidences(const QString &wordSearch);
     //Block of enums
     enum viewsAPP{
         mainWindow = 1

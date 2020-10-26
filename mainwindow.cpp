@@ -149,8 +149,6 @@ void MainWindow::sortByEmail()
 void MainWindow::sortProducts()
 {
     sort(products.begin(), products.end(), condition);
-    for(size_t i = 0; i < products.size(); i++)
-        qDebug() << products[i].getId() << endl;
 }
 
 int MainWindow::validateNewUser(const QString &userID, const QString &userEmail)
@@ -211,6 +209,7 @@ int MainWindow::validateNewUserByEmail(const QString &userEmail)
 
 int MainWindow::findFirstProduct(const QString &firstId)
 {
+    sortProducts();
     int index = -1;
     int l = 0;
     int r = products.size() - 1;
@@ -269,16 +268,15 @@ void MainWindow::deleteWidgets()
 
 void MainWindow::createListProducts(int index, const QString &prefix)
 {
-    vector<Product> list;
-    list.push_back(products[index]);
+    sublist.clear();
+    sublist.push_back(products[index]);
     for(size_t i = index + 1; i < products.size(); i++){
         QString id = products[i].getId();
         bool condition = id.startsWith(prefix);
         if(condition){
-            list.push_back(products[i]);
+            sublist.push_back(products[i]);
         }
     }
-    addWidgets(list);
 }
 
 void MainWindow::addWidgets(vector<Product> &list)
@@ -304,7 +302,85 @@ void MainWindow::addWidgets(vector<Product> &list)
 
     }
     ui->scrollContent->setLayout(gLay);
-    list.clear();
+}
+
+void MainWindow::sortByMinorPrice(int selectList)
+{
+    if(selectList == 0){
+        sort(products.begin(), products.end(), [](Product &p, Product &p1){
+            return p.getPriceProduct() < p1.getPriceProduct();
+        });
+        addWidget();
+    }
+    else if(selectList == 1){
+        sort(sublist.begin(), sublist.end(), [](Product &p, Product &p1){
+            return p.getPriceProduct() < p1.getPriceProduct();
+        });
+        addWidgets(sublist);
+    }
+    else if(selectList == 2){
+        sort(temporalList.begin(), temporalList.end(), [](Product &p, Product &p1){
+            return p.getPriceProduct() < p1.getPriceProduct();
+        });
+        addWidgets(temporalList);
+    }
+}
+
+void MainWindow::sortByMajorPrice(int selectlist)
+{
+    if(selectlist == 0){
+        sort(products.begin(), products.end(), [](Product &p, Product &p1){
+            return p.getPriceProduct() > p1.getPriceProduct();
+        });
+        addWidget();
+    }
+    else if(selectlist == 1){
+        sort(sublist.begin(), sublist.end(), [](Product &p, Product &p1){
+            return p.getPriceProduct() > p1.getPriceProduct();
+        });
+        addWidgets(sublist);
+    }
+    else if(selectlist == 2){
+        sort(temporalList.begin(), temporalList.end(), [](Product &p, Product &p1){
+            return p.getPriceProduct() > p1.getPriceProduct();
+        });
+        addWidgets(temporalList);
+    }
+}
+
+void MainWindow::searchCoincidences(const QString &wordSearch)
+{
+    temporalList.clear();
+    int selectList = ui->comboBox->currentIndex();
+    if(selectList == 0){
+        auto it = products.begin();
+        while(it != products.end()){
+            QString currentWord = it->getNameProduct();
+            bool comparator = currentWord.contains(wordSearch, Qt::CaseInsensitive);
+            if(comparator){
+                temporalList.push_back(*it);
+            }
+            it++;
+        }
+    }
+    else{
+        auto it = sublist.begin();
+        while(it != sublist.end()){
+            QString currentWord = it->getNameProduct();
+            bool comparator = currentWord.contains(wordSearch, Qt::CaseInsensitive);
+            if(comparator){
+                temporalList.push_back(*it);
+            }
+            it++;
+        }
+    }
+    if(temporalList.size() > 0){
+        deleteWidgets();
+        addWidgets(temporalList);
+    }
+    else {
+        deleteWidgets();
+    }
 }
 
 void MainWindow::on_usernameLE_textChanged(const QString &arg1)
@@ -399,29 +475,96 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
 {
     deleteWidgets();
     int firstIndex;
+    int selectList = 0;
+    ui->sortBy->setCurrentIndex(0);
+    ui->searchText->setText("");
     switch(index){
-    case 0:
-        addWidget();
-        break;
     case 1:
         firstIndex = findFirstProduct("AB01");
         createListProducts(firstIndex, "AB");
+        selectList = 1;
         break;
     case 2:
         firstIndex = findFirstProduct("L01");
         createListProducts(firstIndex, "L");
+        selectList = 1;
         break;
     case 3:
         firstIndex = findFirstProduct("E01");
         createListProducts(firstIndex, "E");
+        selectList = 1;
         break;
     case 4:
         firstIndex = findFirstProduct("HC01");
         createListProducts(firstIndex, "HC");
+        selectList = 1;
         break;
     case 5:
         firstIndex = findFirstProduct("D01");
         createListProducts(firstIndex, "D");
+        selectList = 1;
         break;
+    }
+    if(selectList == 0){
+        addWidget();
+        if(sublist.size() > 0)
+            sublist.clear();
+    }
+    else
+        addWidgets(sublist);
+}
+
+void MainWindow::on_sortBy_currentIndexChanged(int index)
+{
+    int selectList = -1;
+    int currentDepartament = ui->comboBox->currentIndex();
+    int sizeWordSearch = ui->searchText->text().length();
+    if(currentDepartament == 0 && sizeWordSearch == 0)
+        selectList = 0;
+    else if(currentDepartament > 0 && sizeWordSearch == 0)
+        selectList = 1;
+    else {
+        selectList = 2;
+    }
+    switch (index) {
+        case 1:
+            deleteWidgets();
+            sortByMinorPrice(selectList);
+            break;
+        case 2:
+            deleteWidgets();
+            sortByMajorPrice(selectList);
+            break;
+    }
+}
+
+
+void MainWindow::on_searchText_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1);
+    QString wordSearch = ui->searchText->text();
+    if(wordSearch.size() > 0){
+        searchCoincidences(wordSearch);
+    }
+    else {
+        deleteWidgets();
+        temporalList.clear();
+        int currentDepartament = ui->comboBox->currentIndex();
+        int selectSort = ui->sortBy->currentIndex();
+        int selectList = -1;
+        if(currentDepartament == 0)
+            selectList = 0;
+        else
+            selectList = 1;
+        if(selectSort == 0){
+            if(selectList == 0)
+                addWidget();
+            else
+                addWidgets(sublist);
+        }
+        else if(selectSort == 1)
+            sortByMinorPrice(selectList);
+        else if(selectSort == 2)
+            sortByMajorPrice(selectList);
     }
 }
