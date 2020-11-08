@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    purchase();
     saveDB();
     delete ui;
 }
@@ -58,7 +59,7 @@ void MainWindow::validateUser()
     it = find_if(users.begin(), users.end(), [&user, &password](User u) ->bool {
         return u.getPassword() == password && u.getUserName() == user;
     });
-
+    searchIndexUser(user);
     if(it == users.end()){
         message.setText("Invalid credentials for the user");
         message.setIcon(QMessageBox::Warning);
@@ -90,18 +91,16 @@ void MainWindow::saveDB()
     dbFile.open(QIODevice::WriteOnly);
     dbFile.write(jsonDoc.toJson());
     dbFile.close();
-
-
 }
 
 void MainWindow::loadDB()
 {
     QJsonObject jsonObj;
     QJsonDocument jsonDoc;
+    QJsonArray dbArray;
     if(dbFile.open(QIODevice::ReadOnly)){
         QByteArray data = dbFile.readAll();
         dbFile.close();
-        qDebug() << data.size();
         jsonDoc = QJsonDocument::fromJson(data);
         jsonObj = jsonDoc.object();
         dbArray = jsonObj["products"].toArray();
@@ -112,7 +111,6 @@ void MainWindow::loadDB()
             p.setNameProduct(obj["name"].toString());
             p.setPriceProduct(obj["price"].toDouble());
             products.push_back(p);
-            qDebug() << p.getNameProduct() << endl;
         }
         dbArray = jsonObj["users"].toArray();
         for(int i(0); i < dbArray.size(); ++i){
@@ -122,7 +120,6 @@ void MainWindow::loadDB()
             u.setEmail(obj["email"].toString());
             u.setPassword(obj["password"].toString());
             users.push_back(u);
-            qDebug() << u.getUserName() << endl;
         }
         dbJson = jsonDoc.object();
         sortProducts();
@@ -239,10 +236,11 @@ void MainWindow::addWidget()
     while(stateAdd){
         if(j < 4){
             ProductWidget * product = new ProductWidget();
-            product->setFixedSize(200, 300);
+            product->setFixedSize(300, 300);
             product->addInformation(products[index++]);
             gLay->addWidget(product, i, j);
             j++;
+            connect(product, SIGNAL(addItem(QString, int)), this, SLOT(addToChart(QString, int)));
         }
         else if(j >= 4){
             i++;
@@ -250,7 +248,6 @@ void MainWindow::addWidget()
         }
         if(index >= products.size())
             stateAdd = false;
-
     }
     ui->scrollContent->setLayout(gLay);
 }
@@ -288,10 +285,11 @@ void MainWindow::addWidgets(vector<Product> &list)
     while(stateAdd){
         if(j < 4){
             ProductWidget * product = new ProductWidget();
-            product->setFixedSize(200, 300);
+            product->setFixedSize(300, 300);
             product->addInformation(list[index++]);
             gLay->addWidget(product, i, j);
             j++;
+            connect(product, SIGNAL(addItem(QString, int)), this, SLOT(addToChart(QString, int)));
         }
         else if(j >= 4){
             i++;
@@ -383,6 +381,30 @@ void MainWindow::searchCoincidences(const QString &wordSearch)
     }
 }
 
+bool MainWindow::checkTime(const QString &date)
+{
+    bool check;
+    if(dateOfPurchase.length() == 0){
+        dateOfPurchase = date;
+        check = true;
+    }
+    else
+        check = true;
+    return check;
+}
+
+void MainWindow::searchIndexUser(const QString &idUser)
+{
+    currentUserIndex = 0;
+    QJsonArray listUsers = dbJson["users"].toArray();
+    for(int i = 0; i < listUsers.size(); i++){
+        QJsonObject obj = listUsers[i].toObject();
+        if(idUser == obj["name"].toString())
+            break;
+        currentUserIndex++;
+    }
+}
+
 void MainWindow::on_usernameLE_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
@@ -415,10 +437,10 @@ void MainWindow::on_newPasswordLE_textChanged(const QString &arg1)
 
 void MainWindow::on_signInPB_clicked()
 {
-    QJsonObject jsonObjAux = dbJson;
     QJsonObject jsonObj;
     QMessageBox message;
     User user;
+    QJsonArray dbArray = dbJson["users"].toArray();
     user.setUserName(ui->newUserLE->text());
     user.setEmail(ui->emailLE->text());
     user.setPassword(ui->newPasswordLE->text());
@@ -566,5 +588,37 @@ void MainWindow::on_searchText_textChanged(const QString &arg1)
             sortByMinorPrice(selectList);
         else if(selectSort == 2)
             sortByMajorPrice(selectList);
+    }
+}
+
+void MainWindow::addToChart(QString item, int amount)
+{
+    QJsonArray purchaseArray;
+    QDateTime date;
+    date.setDate(QDate::currentDate());
+    date.setTime(QTime::currentTime());
+    QString currentDate = date.toString("yyyy/MM/dd HH:mm:ss");
+    bool check = checkTime(currentDate);
+    if(check){
+        purchaseArray = purchaseUser[dateOfPurchase].toArray();
+        QJsonObject element;
+        element["id"] = item;
+        element["amount"] = amount;
+        purchaseArray.append(element);
+        purchaseUser[dateOfPurchase] = purchaseArray;
+    }
+}
+
+void MainWindow::purchase()
+{
+    if(dateOfPurchase.length() > 0){
+        QJsonArray aux = dbJson["users"].toArray();
+        QJsonObject obj = aux[currentUserIndex].toObject();
+        QJsonArray listPurchase = obj["purchase"].toArray();
+        aux.removeAt(currentUserIndex);
+        listPurchase.append(purchaseUser);
+        obj["purchase"] = listPurchase;
+        aux.insert(currentUserIndex, obj);
+        dbJson["users"] = aux;
     }
 }

@@ -17,22 +17,35 @@ void ProductWidget::addInformation(const Product &product)
 {
     QString price;
     QString nameProduct = product.getNameProduct();
-    if(nameProduct.length() > 75){
-        nameProduct.insert(25, "\n");
-        nameProduct.insert(50, "\n");
-        nameProduct.insert(75, "\n");
-    }
-    else {
-        nameProduct.insert(25, "\n");
-        nameProduct.insert(50, "\n");
-    }
+    if(nameProduct.length() > 33)
+        nameProduct.insert(33, "\n");
+    if(nameProduct.length() > 66)
+        nameProduct.insert(66, "\n");
     price.setNum(product.getPriceProduct());
     ui->PriceLabel->setText(price);
     ui->IdLabel->setText(product.getId());
-    ui->nameLabel->setFixedWidth(200);
     ui->nameLabel->setText(nameProduct);
-    ui->ImageLabel->setFixedSize(200, 200);
+    ui->ImageLabel->setFixedSize(150, 150);
     QString imageId = product.getId();
+    productId = imageId;
     QPixmap pix(":/Img/imgs/" + imageId + ".jpg");
-    ui->ImageLabel->setPixmap(pix.scaled(200, 200, Qt::KeepAspectRatio, Qt::FastTransformation));
+    ui->ImageLabel->setPixmap(pix.scaled(150, 150, Qt::KeepAspectRatio, Qt::FastTransformation));
+}
+
+void ProductWidget::on_numberProducts_valueChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1);
+    int numberProductus = ui->numberProducts->value();
+    if(numberProductus > 0){
+        ui->addPB->setEnabled(true);
+    }
+    else{
+        ui->addPB->setEnabled(false);
+    }
+}
+
+void ProductWidget::on_addPB_clicked()
+{
+    emit addItem(productId, ui->numberProducts->value());
+    ui->numberProducts->setValue(0);
 }

@@ -1,6 +1,5 @@
 ﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
 #include <QMainWindow>
 #include <QMessageBox>
 #include <vector>
@@ -17,6 +16,7 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <memory.h>
+#include <QDateTime>
 #include "user.h"
 #include "productwidget.h"
 
@@ -55,6 +55,8 @@ private slots:
 
     void on_searchText_textChanged(const QString &arg1);
 
+    void addToChart(QString item, int amount);
+
 private:
     //part of variables of the program
     Ui::MainWindow *ui;
@@ -65,8 +67,10 @@ private:
     QGridLayout *gLay;
     QAction *openFileAction;
     QFile dbFile;
-    QJsonArray dbArray;
     QJsonObject dbJson;
+    QJsonObject purchaseUser;
+    QString dateOfPurchase;
+    int currentUserIndex;
     //Block of methods
     void enableLoginPB();
     void enableSignInPB();
@@ -87,6 +91,9 @@ private:
     void sortByMinorPrice(int selectList);
     void sortByMajorPrice(int selectlist);
     void searchCoincidences(const QString &wordSearch);
+    bool checkTime(const QString &date);
+    void searchIndexUser(const QString &idUser);
+    void purchase();
     //Block of enums
     enum viewsAPP{
         mainWindow = 1

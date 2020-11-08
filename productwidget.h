@@ -17,8 +17,15 @@ public:
     ~ProductWidget();
     void addInformation(const Product &product);
 
+private slots:
+    void on_numberProducts_valueChanged(const QString &arg1);
+    void on_addPB_clicked();
+
+signals:
+    void addItem(QString id, int amount);
 private:
     Ui::ProductWidget *ui;
+    QString productId;
 };
 
 #endif // PRODUCTWIDGET_H
